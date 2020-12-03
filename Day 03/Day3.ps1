@@ -47,7 +47,7 @@ function ParseMap
     {
         $mapLine = @()
         $Lines[$lineNumber].ToCharArray() | ForEach-Object {
-            $isTree = if ($_ -eq ".") { $false } else { $true }
+            $isTree = $_ -eq "#"
             $mapLine += $isTree
         }
 
