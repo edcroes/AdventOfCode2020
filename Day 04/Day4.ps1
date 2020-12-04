@@ -1,9 +1,9 @@
 ﻿function ParsePassport
 {
-    param($UnparsedPassword)
+    param($UnparsedPassport)
 
     $passport = @{}
-    ($UnparsedPassword -split " ") | ForEach-Object { $key,$value = $_ -split ":"; $passport.Add($key, $value) }
+    ($UnparsedPassport -split " ") | ForEach-Object { $key,$value = $_ -split ":"; $passport.Add($key, $value) }
 
     return $passport
 }
@@ -69,7 +69,7 @@ $noOfValidPassportsPart2 = 0
 
 foreach ($unparsedPassport in $unparsedPassports)
 {
-    $passport = ParsePassport -UnparsedPassword $unparsedPassport
+    $passport = ParsePassport -UnparsedPassport $unparsedPassport
     
     if (AreRequiredFieldsPresent -Passport $passport)
     {
