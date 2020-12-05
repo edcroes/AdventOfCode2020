@@ -2,7 +2,7 @@ function GetSeatId
 {
     param([string]$Line)
 
-    $row = [Convert]::ToUInt16($Line.Substring(0, 7).Replace("B", "1").Replace("F", "0"), 2)
+    $row = [Convert]::ToByte($Line.Substring(0, 7).Replace("B", "1").Replace("F", "0"), 2)
     $seat = [Convert]::ToByte($Line.Substring(7).Replace("L", "0").Replace("R", "1"), 2)
     return $row * 8 + $seat
 }
