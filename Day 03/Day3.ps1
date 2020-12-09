@@ -1,19 +1,4 @@
-﻿function DrawMap
-{
-    param($Map)
-
-    foreach ($line in $Map)
-    {
-        foreach ($point in $line)
-        {
-            $char = if ($point) { "#" } else { "." }
-            Write-Host $char -NoNewline
-        }
-        Write-Host ""
-    }
-}
-
-function GetTreeCount
+﻿function GetTreeCount
 {
     param($Map, $MoveX, $MoveY)
 
@@ -37,29 +22,9 @@ function GetTreeCount
     return $treesFound
 }
 
-function ParseMap
-{
-    param($Lines)
-
-    $map = [bool[][]]::new($Lines.Length)
-
-    for ($lineNumber = 0; $lineNumber -lt $lines.Length; $lineNumber++)
-    {
-        $mapLine = @()
-        $Lines[$lineNumber].ToCharArray() | ForEach-Object {
-            $isTree = $_ -eq "#"
-            $mapLine += $isTree
-        }
-
-        $map[$lineNumber] = $mapLine
-    }
-
-    return $map
-}
-
-
+Import-Module -Name "$PSScriptRoot\..\Modules\Map.psm1" -Force
 $lines = Get-Content -Path "$PSScriptRoot\input.txt"
-$map = ParseMap -Lines $lines
+$map = ConvertTo-BoolMatrix -Lines $lines -TrueValue "#"
 #DrawMap -Map $map
 
 # Part 1
