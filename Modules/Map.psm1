@@ -33,3 +33,32 @@ function ConvertTo-BoolMatrix
 
     return $map
 }
+
+<#
+.SYNOPSIS
+Creates a char matrix from a string array.
+
+.PARAMETER Lines
+The string array that should be converted.
+
+.OUTPUTS
+A two-dimensional char array.
+#>
+function ConvertTo-CharMatrix
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory)]
+        [string[]] $Lines
+    )
+
+    $map = [char[][]]::new($Lines.Length)
+
+    for ($lineNumber = 0; $lineNumber -lt $Lines.Length; $lineNumber++)
+    {
+        $map[$lineNumber] = $Lines[$lineNumber].ToCharArray()
+    }
+
+    return $map
+}
