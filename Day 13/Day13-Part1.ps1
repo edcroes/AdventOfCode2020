@@ -18,4 +18,5 @@ foreach ($bus in $busTimes)
     }
 }
 
-$earliestBus * ($earliestArrivalTime - $arrivalTime)
+$answer = $earliestBus * ($earliestArrivalTime - $arrivalTime)
+Write-Host "Answer Part 1: $answer"
