@@ -66,7 +66,7 @@ foreach ($ticket in $otherTickets)
 Write-Host "Answer Part 1: $summedInvalids"
 
 # Part 2
-$otherTickets = $otherTickets | Where-Object { -not $_.InvalidValues }
+$otherTickets = $otherTickets | Where-Object { $_.InvalidValues.Length -eq 0 }
 
 $options = [object[]]::new($myTicket.Length)
 for ($i = 0; $i -lt $myTicket.Length; $i++)
