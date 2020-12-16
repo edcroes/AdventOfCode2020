@@ -1,5 +1,3 @@
-
-$script:invalids = @{}
 function IsFieldValidInClass
 {
     param($Field, $Class)
@@ -10,15 +8,6 @@ function IsFieldValidInClass
         {
             return $true
         }
-    }
-
-    if ($script:invalids.ContainsKey($Class.Name))
-    {
-        $script:invalids[$Class.Name]++
-    }
-    else
-    {
-        $script:invalids.Add($Class.Name, 1)
     }
 
     return $false
@@ -41,8 +30,6 @@ function IsFieldValidInClasses
 
 $ErrorActionPreference = "Stop"
 $contents = Get-Content -Path "$PSScriptRoot\input.txt" -Raw
-
-# Parsing
 $classesPart,$myTicketPart,$otherTicketsPart = $contents.Replace("`r", "").Split(@("`n`n"), [System.StringSplitOptions]::RemoveEmptyEntries)
 
 $classes = @()
@@ -102,7 +89,7 @@ foreach ($option in $sortedOptions)
     $lefOverOption = @($option.Classes | Where-Object { $fieldClass -notcontains $_ })
     if ($lefOverOption.Length -ne 1)
     {
-        throw "More than one choices left"
+        throw "More than one or no choices left"
     }
     $fieldClass[$option.FieldIndex] = $lefOverOption[0]
 }
