@@ -84,45 +84,33 @@ $otherTickets = $otherTickets | Where-Object { -not $_.InvalidValues }
 $options = [object[]]::new($myTicket.Length)
 for ($i = 0; $i -lt $myTicket.Length; $i++)
 {
-    $options[$i] = $classes | Where-Object { IsFieldValidInClass -Class $_ -Field $myTicket[$i] }
+    $options[$i] = @{ FieldIndex = $i; Classes = @($classes | Where-Object { IsFieldValidInClass -Class $_ -Field $myTicket[$i] }) }
 }
 
 foreach ($ticket in $otherTickets)
 {
     for ($i = 0; $i -lt $ticket.Values.Length; $i++)
     {
-        $options[$i] = @($options[$i] | Where-Object { IsFieldValidInClass -Class $_ -Field $ticket.Values[$i] })
+        $options[$i].Classes = @($options[$i].Classes | Where-Object { IsFieldValidInClass -Class $_ -Field $ticket.Values[$i] })
     }
 }
 
-while (($options | Where-Object { $_.Length -gt 1 }))
+$fieldClass = [object[]]::new($myTicket.Length)
+$sortedOptions = $options | Sort-Object { $_.Classes.Length }
+foreach ($option in $sortedOptions)
 {
-    for ($i = 0; $i -lt $options.Length; $i++)
+    $lefOverOption = @($option.Classes | Where-Object { $fieldClass -notcontains $_ })
+    if ($lefOverOption.Length -ne 1)
     {
-        $currentOptions = $options[$i]
-
-        if ($currentOptions.Length -eq 1)
-        {
-            for ($j = 0; $j -lt $options.Length; $j++)
-            {
-                if ($i -eq $j)
-                {
-                    continue;
-                }
-
-                if ($options[$j] -contains $currentOptions[0])
-                {
-                    $options[$j] = @($options[$j] | Where-Object { $_ -ne $currentOptions[0] })
-                }
-            }
-        }
+        throw "More than one choices left"
     }
+    $fieldClass[$option.FieldIndex] = $lefOverOption[0]
 }
 
 $answerPart2 = 1
-for ($i = 0; $i -lt $options.Length; $i++)
+for ($i = 0; $i -lt $fieldClass.Length; $i++)
 {
-    if ($options[$i][0].Name -like "departure *")
+    if ($fieldClass[$i].Name -like "departure *")
     {
         $answerPart2 *= $myTicket[$i]
     }
