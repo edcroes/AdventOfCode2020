@@ -15,7 +15,7 @@ namespace AoC2020
 
             if (args != null && args.Length > 0 &&  int.TryParse(args[0], out int day))
             {
-                dayType = allDays.SingleOrDefault(d => d.Name.EndsWith(day.ToString("D:2"))) ?? dayType;
+                dayType = allDays.SingleOrDefault(d => d.Name.EndsWith(day.ToString("D2"))) ?? dayType;
             }
 
             var dayInstance = (IMDay)Activator.CreateInstance(dayType);
