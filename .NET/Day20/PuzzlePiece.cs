@@ -1,7 +1,7 @@
 ﻿using AoC2020.Common;
 using AoC2020.Common.Maps;
 
-namespace AoC2020.Day19
+namespace AoC2020.Day20
 {
     public class PuzzlePiece
     {

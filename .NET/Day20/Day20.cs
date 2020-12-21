@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using AoC2020.Common.Maps;
 
-namespace AoC2020.Day19
+namespace AoC2020.Day20
 {
-    public class Day19 : IMDay
+    public class Day20 : IMDay
     {
         private readonly SquarePuzzle _puzzle;
 
-        public Day19()
+        public Day20()
         {
-            var input = File.ReadAllText("Day19\\input.txt");
+            var input = File.ReadAllText("Day20\\input.txt");
             _puzzle = new SquarePuzzle(ParseInput(input));
         }
 

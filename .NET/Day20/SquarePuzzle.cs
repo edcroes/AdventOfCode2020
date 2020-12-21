@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AoC2020.Day19
+namespace AoC2020.Day20
 {
     public class SquarePuzzle
     {
