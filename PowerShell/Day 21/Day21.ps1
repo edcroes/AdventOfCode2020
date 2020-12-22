@@ -17,34 +17,56 @@ $ingredientLists = Get-Content -Path "$PSScriptRoot\input.txt" | Where-Object { 
 
 $knownIngredientAllergen = @{}
 
-$listWithOneAllergen = @($ingredientLists | Where-Object { $_.Allergens.Length -eq 1 })
-while ($listWithOneAllergen.Length -gt 0)
+$allOptions = @{}
+$listWithAllergens = @($ingredientLists | Where-Object { $_.Allergens })
+while ($listWithAllergens.Length -gt 0)
 {
-    foreach ($list in $listWithOneAllergen)
+    foreach ($list in $listWithAllergens)
     {
-        if ($knownIngredientAllergen.Keys -contains $list.Allergens[0])
+        foreach ($allergen in $list.Allergens)
         {
-            continue
-        }
-
-        $options = @($list.Ingredients)
-        if ($options.Length -gt 1)
-        {
-            $otherListsWithAllergen = $ingredientLists | Where-Object { $_.Allergens -contains $list.Allergens[0] }
-
-            foreach ($otherList in $otherListsWithAllergen)
+            if ($knownIngredientAllergen.Keys -contains $allergen)
             {
-                $options = @($options | Where-Object { $otherList.Ingredients -contains $_ })
-                if ($options.Length -lt 2)
+                continue
+            }
+
+            $options = @($list.Ingredients)
+            if ($options.Length -gt 1)
+            {
+                $otherListsWithAllergen = $ingredientLists | Where-Object { $_.Allergens -contains $allergen }
+
+                foreach ($otherList in $otherListsWithAllergen)
                 {
-                    break
+                    $options = @($options | Where-Object { $otherList.Ingredients -contains $_ })
+                    if ($options.Length -lt 2)
+                    {
+                        break
+                    }
                 }
             }
-        }
 
-        if ($options.Length -eq 1)
-        {
-            $knownIngredientAllergen.Add($list.Allergens[0], $options[0])
+            if ($options.Length -eq 1)
+            {
+                $knownIngredientAllergen.Add($allergen, $options[0])
+                $allOptions.Remove($allergen)
+            }
+            else
+            {
+                if ($allOptions.ContainsKey($allergen))
+                {
+                    $allOptions[$allergen] = @($allOptions[$allergen] | Where-Object { $options -contains $_ })
+                    if ($allOptions[$allergen].Length -eq 1)
+                    {
+                        $knownIngredientAllergen.Add($allergen, $allOptions[$allergen][0])
+                        $allOptions.Remove($allergen)
+                    }
+                }
+                else
+                {
+                    $allOptions.Add($allergen, $options)
+                }
+            }
+
         }
     }
 
@@ -54,7 +76,7 @@ while ($listWithOneAllergen.Length -gt 0)
         $list.Allergens = @($list.Allergens | Where-Object {$knownIngredientAllergen.Keys -notcontains $_ })
     }
 
-    $listWithOneAllergen = @($ingredientLists | Where-Object { $_.Allergens.Length -eq 1 })
+    $listWithAllergens = @($ingredientLists | Where-Object { $_.Allergens })
 }
 
 # Part 1
