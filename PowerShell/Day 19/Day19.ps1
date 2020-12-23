@@ -32,6 +32,10 @@ function GetRegex
 
     $regex = ""
     $or = $false
+    if (-not $Rule.SubRules)
+    {
+        Write-Host "wtf"
+    }
     $parts = $Rule.SubRules.Split(" ")
     foreach ($part in $parts)
     {
@@ -65,3 +69,18 @@ $regexRule0 = GetRegex -Rule $rules[0] -Rules $rules
 $messagesThatMatch = $messages | Where-Object { $_ -match "^$regexRule0$" }
 
 Write-Host "Answer Part 1: $($messagesThatMatch.Count)"
+
+# Part 2
+# 8: 42 | 42 8 -> could be 42, 42 42, 42 42 42 etc... or in regex language 42+
+$rule42Regex = GetRegex -Rule $rules[42] -Rules $rules
+$rules[8].Regex = if ($rule42Regex -like "(*)") { "$rule42Regex+" } else { "(?:$rule42Regex)+" }
+
+# 11: 42 31 | 42 11 31 -> could be 42 31, 42 42 31 31, 42 42 42 31 31 31 etc... or the joy of balancing groups
+$rule31Regex = GetRegex -Rule $rules[31] -Rules $rules
+$rules[11].Regex = "(?<count>$rule42Regex)+(?<-count>$rule31Regex)+(?(count)(?!))"
+
+$rules[0].Regex = $null
+$regexRule0 = GetRegex -Rule $rules[0] -Rules $rules
+$messagesThatMatch = $messages | Where-Object { $_ -match "^$regexRule0$" }
+
+Write-Host "Answer Part 2: $($messagesThatMatch.Count)"
