@@ -67,7 +67,7 @@ namespace AoC2020.Common.Maps
                         {
                             var currentPoint = new Point4D(x, y, z, w);
                             var currentValue = GetValue(currentPoint);
-                            var matches = NumberOfNeighboursThatMatch(currentPoint, aliveValue);
+                            var matches = NumberOfNeighborsThatMatch(currentPoint, aliveValue);
 
                             var newValue = getNewValue(aliveValue.Equals(currentValue), matches, currentValue);
                             if (!newValue.Equals(currentValue))
@@ -85,7 +85,7 @@ namespace AoC2020.Common.Maps
             }
         }
 
-        public int NumberOfNeighboursThatMatch(Point4D point, T valueToMatch)
+        public int NumberOfNeighborsThatMatch(Point4D point, T valueToMatch)
         {
             var numberOfMatches = 0;
 

@@ -44,10 +44,10 @@ namespace AoC2020.Day17
         {
             for (int cycle = 0; cycle < Cycles; cycle++)
             {
-                _mapPart1.DistributeChaos(true, (alive, neighbourMatches, currentValue) =>
+                _mapPart1.DistributeChaos(true, (alive, neighborMatches, currentValue) =>
                 {
-                    if ((alive && (neighbourMatches < 2 || neighbourMatches > 3)) ||
-                        (!alive && neighbourMatches == 3))
+                    if ((alive && (neighborMatches < 2 || neighborMatches > 3)) ||
+                        (!alive && neighborMatches == 3))
                     {
                         return !currentValue;
                     }
@@ -62,10 +62,10 @@ namespace AoC2020.Day17
         {
             for (int cycle = 0; cycle < Cycles; cycle++)
             {
-                _mapPart2.DistributeChaos(true, (alive, neighbourMatches, currentValue) =>
+                _mapPart2.DistributeChaos(true, (alive, neighborMatches, currentValue) =>
                 {
-                    if ((alive && (neighbourMatches < 2 || neighbourMatches > 3)) ||
-                        (!alive && neighbourMatches == 3))
+                    if ((alive && (neighborMatches < 2 || neighborMatches > 3)) ||
+                        (!alive && neighborMatches == 3))
                     {
                         return !currentValue;
                     }

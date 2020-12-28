@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace AoC2020.Common.Maps
@@ -103,6 +104,70 @@ namespace AoC2020.Common.Maps
             }
 
             return count;
+        }
+
+        public void DistributeChaos(T aliveValue, Func<bool, int, T, T> getNewValue)
+        {
+            var pointsToChange = new Dictionary<Point, T>();
+
+            for (int y = 0; y < SizeY; y++)
+            {
+                for (int x = 0; x < SizeX; x++)
+                {
+                    var currentPoint = new Point(x, y);
+                    var currentValue = GetValue(currentPoint.X, currentPoint.Y);
+                    var matches = NumberOfNeighborsThatMatch(currentPoint, aliveValue);
+
+                    var newValue = getNewValue(aliveValue.Equals(currentValue), matches, currentValue);
+                    if (!newValue.Equals(currentValue))
+                    {
+                        pointsToChange.Add(currentPoint, newValue);
+                    }
+                }
+            }
+
+            foreach (var point in pointsToChange.Keys)
+            {
+                SetValue(point.X, point.Y, pointsToChange[point]);
+            }
+        }
+
+        public int NumberOfNeighborsThatMatch(Point point, T valueToMatch)
+        {
+            var numberOfMatches = 0;
+            for (int y = Math.Max(point.Y - 1, 0); y <= point.Y + 1 && y < SizeY; y++)
+            {
+                for (int x = Math.Max(point.X - 1, 0); x <= point.X + 1 && x < SizeX; x++)
+                {
+                    if (y == point.Y && x == point.X)
+                    {
+                        continue;
+                    }
+
+                    if (_map[y, x].Equals(valueToMatch))
+                    {
+                        numberOfMatches++;
+                    }
+                }
+            }
+
+            return numberOfMatches;
+        }
+
+        public void CopyTo(Map<T> otherMap, Point startingPoint)
+        {
+            if (otherMap == null || startingPoint.X + SizeX > otherMap.SizeX || startingPoint.Y + SizeY > otherMap.SizeY)
+            {
+                throw new IndexOutOfRangeException("The map does not fit the destination");
+            }
+
+            for (int y = 0; y < SizeY; y++)
+            {
+                for (int x = 0; x < SizeX; x++)
+                {
+                    otherMap.SetValue(x + startingPoint.X, y + startingPoint.Y, GetValue(x, y));
+                }
+            }
         }
     }
 }
